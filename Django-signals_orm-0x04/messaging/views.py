@@ -17,10 +17,18 @@ def delete_user(request):
     return redirect("/")  # redirect to home or login page
 
 
-def conversation_view(request, user_id):
-    # Fetch top-level messages with related sender, receiver, and replies
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import Message
+
+@login_required
+def conversation_view(request):
+    """
+    Fetch top-level messages sent by the logged-in user,
+    along with their replies using select_related and prefetch_related.
+    """
     messages = (
-        Message.objects.filter(receiver_id=user_id, parent_message__isnull=True)
+        Message.objects.filter(sender=request.user, parent_message__isnull=True)
         .select_related("sender", "receiver")
         .prefetch_related("replies__sender", "replies__receiver")
         .order_by("timestamp")
