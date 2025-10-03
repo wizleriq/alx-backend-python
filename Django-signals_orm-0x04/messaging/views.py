@@ -34,3 +34,8 @@ def conversation_view(request):
         .order_by("timestamp")
     )
     return render(request, "messaging/conversation.html", {"messages": messages})
+
+def inbox_view(request):
+    user = request.user
+    unread_message = Message.unread.fo-user(user)
+    return render(request, "messaging/inbox.html", {"unread_messages": unread_messages})

@@ -9,6 +9,7 @@ class Message(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     edited = models.BooleanField(default=False)
     edited_at = models.DateTimeField(null=True, blank=True)
+    read = models.BooleanField(default=False)
 
     # Self-referential field for threaded replies
     parent_message = models.ForeignKey(
