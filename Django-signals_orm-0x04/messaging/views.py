@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 from django.shortcuts import render
 from .models import Message
 from django.db import models
-
+from django.shortcuts import render, get_object_or_404
+from django.views.decorators.cache import cache_page
 
 
 @login_required
@@ -49,3 +50,8 @@ class UnreadMessagesManager(models.Manager):
         Optimized with `.only()` to fetch only necessary fields.
         """
         return self.filter(receiver=user, read=False).only("id", "sender", "content", "timestamp")
+
+@cache_page(60)  # ✅ cache this view for 60 seconds
+def conversation_messages(request, conversation_id):
+    messages = Message.objects.filter(parent_message__id=conversation_id).order_by("timestamp")
+    return render(request, "messaging/conversation.html", {"messages": messages})
