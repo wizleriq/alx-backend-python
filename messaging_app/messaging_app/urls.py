@@ -21,7 +21,8 @@ Including another URLconf
 #     path('admin/', admin.site.urls),
 # ]
 from django.urls import path, include
-from messaging_app.chats import auth
+from chats import auth
+
 
 urlpatterns = [
     path("api/token/", auth.CustomTokenObtainPairView, name="token_obtain_pair"),
