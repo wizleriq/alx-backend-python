@@ -4,28 +4,28 @@
 # Exit immediately if a command fails
 set -e
 
-echo "🚀 Starting Kubernetes setup..."
+echo "Starting Kubernetes setup..."
 
 # Check if minikube is installed
 if ! command -v minikube &> /dev/null
 then
-    echo "❌ Minikube not found. Please install it first."
-    echo "👉 Visit: https://minikube.sigs.k8s.io/docs/start/"
+    echo "Minikube not found. Please install it first."
+    echo "Visit: https://minikube.sigs.k8s.io/docs/start/"
     exit 1
 else
-    echo "✅ Minikube is installed."
+    echo "Minikube is installed."
 fi
 
 # Start the Minikube cluster
-echo "🔄 Starting Minikube cluster..."
+echo "Starting Minikube cluster..."
 minikube start
 
 # Verify cluster info
-echo "🔍 Verifying Kubernetes cluster..."
+echo "Verifying Kubernetes cluster..."
 kubectl cluster-info
 
 # Retrieve list of all pods
-echo "📦 Getting all pods..."
+echo "Getting all pods..."
 kubectl get pods --all-namespaces
 
-echo "✅ Kubernetes setup complete!"
+echo "Kubernetes setup complete!"
