@@ -1,62 +1,31 @@
-# #!/bin/bash
-# # kurbeScript - Set up and verify a local Kubernetes cluster using Minikube
+#!/usr/bin/env bash
+# kurbeScript - Sets up a local Kubernetes cluster using Minikube
 
-# # Exit immediately if a command fails
-# set -e
+# Exit immediately if a command exits with a non-zero status
+set -e
 
-# echo "Starting Kubernetes setup..."
-
-# # Check if minikube is installed
-# if ! command -v minikube &> /dev/null
-# then
-#     echo "Minikube not found. Please install it first."
-#     echo "Visit: https://minikube.sigs.k8s.io/docs/start/"
-#     exit 1
-# else
-#     echo "Minikube is installed."
-# fi
-
-# # Start the Minikube cluster
-# echo "Starting Minikube cluster..."
-# minikube start
-
-# # Verify cluster info
-# echo "Verifying Kubernetes cluster..."
-# kubectl cluster-info
-
-# # Retrieve list of all pods
-# echo "Getting all pods..."
-# kubectl get pods --all-namespaces
-
-# echo "Kubernetes setup complete!"
-
-
-
-#!/bin/bash
-# kurbeScript - Set up and verify a local Kubernetes cluster using Minikube
-
-set -e  # Exit immediately if a command fails
-
-echo "🚀 Starting Kubernetes setup..."
-
-# Ensure Minikube is installed
+echo "🔍 Checking if Minikube is installed..."
 if ! command -v minikube &> /dev/null
 then
-    echo "❌ Minikube not found. Please install it first."
-    echo "👉 Visit: https://minikube.sigs.k8s.io/docs/start/"
-    exit 1
+    echo "❌ Minikube is not installed."
+    echo "👉 Installing Minikube..."
+    # For Linux users
+    curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+    sudo install minikube-linux-amd64 /usr/local/bin/minikube
+    rm -f minikube-linux-amd64
+    echo "✅ Minikube installed successfully!"
 fi
 
-# Start Minikube cluster
-echo "🔄 Starting Minikube cluster..."
+echo "🚀 Starting Minikube cluster..."
 minikube start
 
-# Verify cluster info
-echo "🔍 Verifying Kubernetes cluster..."
+echo "⏳ Waiting for cluster to be ready..."
+sleep 10
+
+echo "🧠 Verifying Kubernetes cluster info..."
 kubectl cluster-info
 
-# Get pods
-echo "📦 Listing all pods..."
+echo "📦 Retrieving available pods..."
 kubectl get pods --all-namespaces
 
-echo "✅ Kubernetes cluster is up and running!"
+echo "✅ Kubernetes cluster setup complete!"
