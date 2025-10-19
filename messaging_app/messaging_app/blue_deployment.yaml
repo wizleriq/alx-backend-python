@@ -11,6 +11,11 @@ spec:
     matchLabels:
       app: django-messaging
       version: blue
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   template:
     metadata:
       labels:
@@ -19,7 +24,7 @@ spec:
     spec:
       containers:
         - name: django-messaging-blue
-          image: your-dockerhub-username/django-messaging:blue   # Replace with your actual image tag
+          image: your-dockerhub-username/django-messaging:2.0   # ⬅️ Updated version
           ports:
             - containerPort: 8000
           env:

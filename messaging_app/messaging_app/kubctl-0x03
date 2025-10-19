@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Script: kubctl-0x03
+# Purpose: Perform a rolling update on the Django Messaging App (blue deployment)
+
+set -e  # Exit on any error
+
+echo "🚀 Applying updated blue deployment (version 2.0)..."
+kubectl apply -f blue_deployment.yaml
+
+echo "🔄 Monitoring rollout status..."
+kubectl rollout status deployment/django-blue-deployment
+
+echo "✅ Rollout complete. Verifying pods..."
+kubectl get pods -l app=django-messaging
+
+# Get ClusterIP of the service
+SERVICE_IP=$(kubectl get svc django-messaging-service -o jsonpath='{.spec.clusterIP}')
+SERVICE_PORT=$(kubectl get svc django-messaging-service -o jsonpath='{.spec.ports[0].port}')
+
+echo "🌐 Starting continuous request test to detect downtime..."
+for i in {1..20}
+do
+  curl -s -o /dev/null -w "Request $i: %{http_code}\n" http://$SERVICE_IP:$SERVICE_PORT/
+  sleep 2
+done
+
+echo "✅ Rolling update test complete!"
+echo "📊 Final pod status:"
+kubectl get pods -l app=django-messaging
