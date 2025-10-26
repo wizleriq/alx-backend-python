@@ -1,0 +1,4 @@
+Django>=4.2,<5.0
+flake8>=6.0.0
+coverage>=7.0.0
+mysqlclient>=2.2.0
