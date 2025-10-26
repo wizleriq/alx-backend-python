@@ -1,0 +1,50 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/wizleriq/alx-backend-python.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                // Ensure Python and pip are available
+                sh '''
+                    python3 -m venv venv
+                    source venv/bin/activate
+                    pip install --upgrade pip
+                    pip install -r messaging_app/messaging_app/requirements.txt
+                '''
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh '''
+                    source venv/bin/activate
+                    pytest messaging_app/messaging_app/tests --maxfail=1 --disable-warnings -q --junitxml=report.xml
+                '''
+            }
+        }
+
+        stage('Publish Test Report') {
+            steps {
+                junit 'report.xml'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline execution completed.'
+        }
+        success {
+            echo '✅ All tests passed successfully!'
+        }
+        failure {
+            echo '❌ Some tests failed. Please check the report.'
+        }
+    }
+}
